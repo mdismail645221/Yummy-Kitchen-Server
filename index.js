@@ -20,7 +20,7 @@ app.get('/', (req, res)=> {
 // URI=mongodb+srv://yummy-kitchen:DhpuCc6Xd1RDxF7z@cluster0.cn0mdvb.mongodb.net/?retryWrites=true&w=majority
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri =process.env.URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -30,6 +30,7 @@ async function run (){
 
 
         const serviesCollection = client.db('yummy-kitchen').collection('services');
+        const reviewCollection = client.db('yummy-kitchen').collection('reviews');
 
 
 
@@ -45,6 +46,21 @@ async function run (){
             const cursor = serviesCollection.find(query);
             const services = await cursor.toArray();
             res.send(services)
+        })
+        app.get('/allServices/:id', async(req, res)=> {
+            const id = req.params.id;
+            // console.log(id)
+            const query = {_id: ObjectId(id)};
+            const service = await serviesCollection.findOne(query);
+            res.send(service)
+        })
+
+
+
+        // review massage store  in post method 
+        app.post('/allReviews', async(req, res)=> {
+            const query = req.body;
+            console.log(query)
         })
 
 
