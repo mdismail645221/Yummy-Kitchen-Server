@@ -26,10 +26,25 @@ const uri =process.env.URI;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
+// JWT VERIFY TOKEN      
+function verifyJWT(req, res, next){
+    // console.log(req.headers.authorization)
+    const authHeader = req.headers.authorization;
+    if(!authHeader){
+         res.status(401).send({message: 'unauthorization access token'})
+    }
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.JWT_TOKEN, function(err, decoded){
+        if(err){
+             res.status(403).send({message: 'Forbiden access token'})
+        }
+        req.decoded= decoded;
+        next()
+    })
+}
+
 async function run (){
     try{
-
-
         const serviesCollection = client.db('yummy-kitchen').collection('services');
         const reviewCollection = client.db('yummy-kitchen').collection('reviews');
 
@@ -37,7 +52,7 @@ async function run (){
     // JWT TOKEN 
         app.post('/jwt', (req, res)=>{
             const user = req.body;
-            const token = jwt.sign(user, process.env.JWT_TOKEN, {expiresIn: "10d"})
+            const token = jwt.sign(user, process.env.JWT_TOKEN, {expiresIn: '1h'})
             res.send({token})
         })
 
@@ -73,6 +88,10 @@ async function run (){
 
         // All reviews find method 
         app.get('/allReviews', async(req, res)=> {
+            // console.log(req.decoded)
+            // if(req.decoded.email !== req.query.email){
+            //     res.status(401).send('unauthorization access token')
+            // }
             let query = {};
             if(req.query.email){
                 query = {
@@ -126,3 +145,6 @@ run().catch((error)=> {
 app.listen(port, ()=> {
     console.log('Server is running', port);
 })
+
+
+module.exports = app;
