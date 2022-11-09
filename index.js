@@ -3,6 +3,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cors = require('cors');
 require('dotenv').config()
+require('jsonwebtoken');
+const jwt = process.env.JWT_TOKEN;
+console.log(jwt)
 
 
 // middleware
@@ -33,6 +36,12 @@ async function run (){
         const reviewCollection = client.db('yummy-kitchen').collection('reviews');
 
 
+    // JWT TOKEN 
+        app.post('/jwt', (req, res)=>{
+
+        })
+
+    // ALL SERVICESS CURD SERVER MATHOD
 
         app.get('/services', async(req, res)=> {
             const query = {};
@@ -89,6 +98,9 @@ async function run (){
             const remove = await reviewCollection.deleteOne(query);
             res.send(remove)
         })
+
+
+
 
 
     }
