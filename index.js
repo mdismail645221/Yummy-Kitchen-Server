@@ -59,11 +59,19 @@ async function run (){
 
         // All reviews find method 
         app.get('/allReviews', async(req, res)=> {
-            const query = {};
+            let query = {};
+            if(req.query.email){
+                query = {
+                    email: req.query.email
+                }
+            }
+            // console.log(query)
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
+            console.log(review)
             res.send(review)
         })
+
 
         // review massage store  in post method 
         app.post('/allReviews', async(req, res)=> {
@@ -72,6 +80,7 @@ async function run (){
             const review = await reviewCollection.insertOne(query);
             res.send(review)
         })
+
 
 
 
