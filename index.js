@@ -49,10 +49,14 @@ async function run (){
         })
         app.get('/allServices/:id', async(req, res)=> {
             const id = req.params.id;
-            // console.log(id)
             const query = {_id: ObjectId(id)};
             const service = await serviesCollection.findOne(query);
             res.send(service)
+        })
+        app.post('/allServices', async(req, res)=>{
+            const query = req.body;
+            const service = await serviesCollection.insertOne(query);
+            res.send(service);
         })
 
 
@@ -66,17 +70,14 @@ async function run (){
                     email: req.query.email
                 }
             }
-            // console.log(query)
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
-            console.log(review)
             res.send(review)
         })
 
         // review massage store  in post method 
         app.post('/allReviews', async(req, res)=> {
             const query = req.body;
-            // console.log(query)
             const review = await reviewCollection.insertOne(query);
             res.send(review)
         })
@@ -88,9 +89,6 @@ async function run (){
             const remove = await reviewCollection.deleteOne(query);
             res.send(remove)
         })
-
-
-
 
 
     }
