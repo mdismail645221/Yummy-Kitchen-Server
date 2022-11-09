@@ -3,10 +3,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 const cors = require('cors');
 require('dotenv').config()
-require('jsonwebtoken');
-const jwt = process.env.JWT_TOKEN;
-console.log(jwt)
-
+const jwt = require('jsonwebtoken');
+// console.log(jwt)
 
 // middleware
 app.use(express.json())
@@ -38,7 +36,9 @@ async function run (){
 
     // JWT TOKEN 
         app.post('/jwt', (req, res)=>{
-
+            const user = req.body;
+            const token = jwt.sign(user, process.env.JWT_TOKEN, {expiresIn: "10d"})
+            res.send({token})
         })
 
     // ALL SERVICESS CURD SERVER MATHOD
