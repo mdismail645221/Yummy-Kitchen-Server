@@ -56,6 +56,7 @@ async function run (){
         })
 
 
+        //------- REVIVEW SERVER METHOD FUNCTION---------- //
 
         // All reviews find method 
         app.get('/allReviews', async(req, res)=> {
@@ -72,13 +73,20 @@ async function run (){
             res.send(review)
         })
 
-
         // review massage store  in post method 
         app.post('/allReviews', async(req, res)=> {
             const query = req.body;
             // console.log(query)
             const review = await reviewCollection.insertOne(query);
             res.send(review)
+        })
+        
+        // deleted method
+        app.delete('/allReviews/:id', async(req, res)=> {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const remove = await reviewCollection.deleteOne(query);
+            res.send(remove)
         })
 
 
