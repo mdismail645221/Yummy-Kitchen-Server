@@ -26,12 +26,12 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 function verifyJWT(req, res, next) {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.send('unauthorization access token')
+        return res.status(401).send('unauthorization access token')
     }
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.JWT_TOKEN, function (err, decoded) {
         if (err) {
-            return res.send('Forbiden access token')
+            return res.status(403).send('Forbiden access token')
         }
         req.decoded = decoded;
     })
@@ -100,9 +100,9 @@ async function run() {
         // ==================verfiy my riviews ===============///
 
         app.get('/myReviews', verifyJWT, async (req, res) => {
-            if(req.decoded.email !== req.query.email){
-                res.status(401).send('unauthorization access token')
-            }
+            // if(req.decoded.email !== req.query.email){
+            //     res.status(401).send('unauthorization access token')
+            // }
             let query = {};
             if (req.query.email) {
                 query = {
