@@ -17,9 +17,6 @@ app.get('/', (req, res)=> {
 })
 
 
-// PORT=5000
-// URI=mongodb+srv://yummy-kitchen:DhpuCc6Xd1RDxF7z@cluster0.cn0mdvb.mongodb.net/?retryWrites=true&w=majority
-
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri =process.env.URI;
