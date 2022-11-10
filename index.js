@@ -86,7 +86,7 @@ async function run (){
         //------- REVIVEW SERVER METHOD FUNCTION---------- //
 
         // All reviews find method 
-        app.get('/allReviews', verifyJWT, async(req, res)=> {
+        app.get('/allReviews', async(req, res)=> {
             // console.log(req.decoded)
             // if(req.decoded.email !== req.query.email){
             //     res.status(401).send('unauthorization access token')
