@@ -23,6 +23,7 @@ app.get('/', (req, res)=> {
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri =process.env.URI;
+console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
@@ -84,6 +85,7 @@ async function run (){
         })
 
 
+
         //------- REVIVEW SERVER METHOD FUNCTION---------- //
 
         // All reviews find method 
@@ -103,12 +105,39 @@ async function run (){
             res.send(review)
         })
 
+
+        app.get('/allReviews/:id', async(req, res)=> {
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const review = await reviewCollection.findOne(query);
+            res.send(review)
+        })
+
+
         // review massage store  in post method 
         app.post('/allReviews', async(req, res)=> {
             const query = req.body;
             const review = await reviewCollection.insertOne(query);
             res.send(review)
         })
+
+
+        // UPDATE USER API MEHTOD
+        app.put('/allReviews/:id', async(req, res)=> {
+            const id = req.params.id;
+            const filter = {_id: ObjectId(id)};
+            const user =  req.body;
+            console.log(user)
+            const option = {upsert: true};
+            const upUser = {
+                $set: {
+                    serviceInfo: user.serviceInfo,
+                }
+            }
+            const result = await reviewCollection.updateOne(filter, upUser, option);
+            res.send(result)
+        })
+
         
         // deleted method
         app.delete('/allReviews/:id', async(req, res)=> {
