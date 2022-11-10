@@ -29,15 +29,15 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 // JWT VERIFY TOKEN      
 function verifyJWT(req, res, next){
-    // console.log(req.headers.authorization)
+    console.log(req.headers.authorization)
     const authHeader = req.headers.authorization;
     if(!authHeader){
-         res.status(401).send({message: 'unauthorization access token'})
+        return res.send('unauthorization access token')
     }
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.JWT_TOKEN, function(err, decoded){
         if(err){
-             res.status(403).send({message: 'Forbiden access token'})
+           return res.send('Forbiden access token')
         }
         req.decoded= decoded;
         next()
@@ -68,7 +68,7 @@ async function run (){
 
         app.get('/allServices', async(req, res)=> {
             const query= {};
-            const cursor = serviesCollection.find(query);
+            const cursor = serviesCollection.find(query).sort({name: 1});
             const services = await cursor.toArray();
             res.send(services)
         })
@@ -89,7 +89,7 @@ async function run (){
         //------- REVIVEW SERVER METHOD FUNCTION---------- //
 
         // All reviews find method 
-        app.get('/allReviews', async(req, res)=> {
+        app.get('/allReviews', verifyJWT, async(req, res)=> {
             // console.log(req.decoded)
             // if(req.decoded.email !== req.query.email){
             //     res.status(401).send('unauthorization access token')
